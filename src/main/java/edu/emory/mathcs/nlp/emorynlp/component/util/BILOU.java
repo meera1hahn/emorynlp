@@ -15,6 +15,8 @@
  */
 package edu.emory.mathcs.nlp.emorynlp.component.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -60,6 +62,7 @@ public enum BILOU
 		Int2ObjectMap<String> map = new Int2ObjectOpenHashMap<>();
 		int i, beginChunk = -1, size = nodes.length;
 		String tag;
+		List<String> tags = new ArrayList<String>();
 		
 		for (i=beginIndex; i<endIndex; i++)
 		{
@@ -68,15 +71,37 @@ public enum BILOU
 			
 			switch (toBILOU(tag))
 			{
-			case U: map.put(getKey(i,i,size), toTag(tag)); beginChunk = -1; break;
-			case B: beginChunk = i; break;
-			case L: if (0 <= beginChunk&&beginChunk < i) map.put(getKey(beginChunk,i,size), toTag(tag)); beginChunk = -1; break;
-			case O: beginChunk = -1; break;
-			case I: break;
+			case U: 
+				map.put(getKey(i,i,size), toTag(tag)); 
+				beginChunk = -1; 
+				break;
+			case B: 
+				beginChunk = i; 
+				tags.add(toTag(tag)); 
+				break;
+			//case L: if (0 <= beginChunk&&beginChunk < i) map.put(getKey(beginChunk,i,size), toTag(tag)); beginChunk = -1; break;
+			case L: 
+				tags.add(toTag(tag));
+				if (0 <= beginChunk&&beginChunk < i) {
+					map.put(getKey(beginChunk,i,size),getBestTag(tags)); 
+				}
+				beginChunk = -1; 
+				break;
+			case O: 
+				tags.add(toTag(tag)); 
+				beginChunk = -1; 
+				break;
+			case I: 
+				tags.add(toTag(tag));
+				break;
 			}
 		}
-	
 		return map;
+	}
+
+	private static String getBestTag(List<String> tags) {
+		//get most common tag
+		return tags.get(tags.size() - 1);
 	}
 
 	private static int getKey(int beginIndex, int endIndex, int size)
