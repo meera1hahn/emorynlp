@@ -16,6 +16,7 @@
 package edu.emory.mathcs.nlp.emorynlp.component.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -100,6 +101,27 @@ public enum BILOU
 	}
 
 	private static String getBestTag(List<String> tags) {
+		HashMap<String, Integer> mapTAG = new HashMap<>();
+		int value;
+		for(String s: tags) {
+			if(!mapTAG.containsKey(s)) {
+				mapTAG.put(s, 1);
+			} else {
+				value = mapTAG.get(s);
+				mapTAG.put(s, value++);
+			}
+		}
+		String maxTag = "";
+		int countMax = 0;
+		for(HashMap.Entry<String, Integer> entry : mapTAG.entrySet()) {
+			if(entry.getValue() > countMax) {
+				countMax = entry.getValue();
+				maxTag = entry.getKey();
+			}
+		}
+		if(!maxTag.equals("")){
+			return maxTag;
+		}
 		//get most common tag
 		return tags.get(tags.size() - 1);
 	}
