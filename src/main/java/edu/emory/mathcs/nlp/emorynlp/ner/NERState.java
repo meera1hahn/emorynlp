@@ -47,6 +47,10 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 		node.setNamedEntityTag(label);
 		return s;
 	}
+	
+	public void getAmbiguityClass(N node){
+		System.out.println(getLabel(node));
+	}
 
 	@Override
 	public void evaluate(Eval eval)
