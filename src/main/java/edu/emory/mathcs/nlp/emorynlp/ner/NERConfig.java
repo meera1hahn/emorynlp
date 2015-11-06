@@ -40,7 +40,7 @@ public class NERConfig extends NLPConfig<NLPNode>
 	public NERConfig(InputStream in)
 	{
 		super(in);
-		//init();
+		init();
 	}
 	
 	public void init()

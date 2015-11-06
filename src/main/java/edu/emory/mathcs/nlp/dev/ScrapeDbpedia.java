@@ -3,10 +3,8 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -17,7 +15,7 @@ public class ScrapeDbpedia {
 
 	public static void main(String[] args) {
 	
-		HashMap<String, List<String>> entityToTags = new HashMap<String, List<String>>();
+		HashMap<String, String> entityToTags = new HashMap<String, String>();
 		Set<String> possibleTags = new HashSet<String>();
 	    String  currentLine;
 	    Scanner s;
@@ -92,24 +90,18 @@ public class ScrapeDbpedia {
 	}
 	
 	
-	public static void addTags(String entity, Set<String> possibleTags, Map<String, List<String>> entityToTags) {
-		List<String> tags = new ArrayList<>();
-		if(!(possibleTags.contains("Person")||possibleTags.contains("Organisation")||possibleTags.contains("Place"))) {
-			//tags.add("MISC");
-			//entityToTags.put(entity, tags);
+	public static void addTags(String entity, Set<String> possibleTags, Map<String, String> entityToTags) {
+		if(possibleTags.contains("Person")){
+			entityToTags.put(entity.toLowerCase(), "PER");
 			return;
 		}
-		if(possibleTags.contains("Person")){
-			tags.add("PER");
-			entityToTags.put(entity, tags);
-		}
 		if(possibleTags.contains("Organisation")){
-			tags.add("ORG");
-			entityToTags.put(entity, tags);
+			entityToTags.put(entity.toLowerCase(), "ORG");
+			return;
 		}
 		if(possibleTags.contains("Place")){
-			tags.add("LOC");
-			entityToTags.put(entity, tags);
+			entityToTags.put(entity.toLowerCase(), "LOC");
+			return;
 		}
 		return;
 	}

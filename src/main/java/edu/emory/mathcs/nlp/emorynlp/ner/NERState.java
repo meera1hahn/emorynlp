@@ -47,7 +47,8 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 				switch(label) {
 					case "U":
 						//entityTags[i] = ambiguityMap.get(node.getSimplifiedWordForm());
-						System.out.println(node.getSimplifiedWordForm());
+						System.out.println(node.getSimplifiedWordForm().toLowerCase());
+						break;
 					case "B":
 						String full = node.getSimplifiedWordForm();
 						if (innerCount + i == nodes.length) {
@@ -56,7 +57,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 						}
 						node = nodes[innerCount + i];
 						while(getLabel(node).substring(0, 1).equals("I")){
-							full += "_" + node.getSimplifiedWordForm();
+							full += "_" + node.getSimplifiedWordForm().toLowerCase();
 							if (innerCount + i == nodes.length - 1) {
 								break;
 							}
@@ -64,7 +65,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 							node = nodes[innerCount + i];
 						}
 						if(getLabel(node).substring(0, 1).equals("L")) {
-							full += "_" + node.getSimplifiedWordForm();
+							full += "_" + node.getSimplifiedWordForm().toLowerCase();
 						}
 						System.out.println(full);
 						int j;
@@ -73,6 +74,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 						}
 						i = j;
 						innerCount = 1;
+						break;
 				}
 			}
 		}
@@ -100,7 +102,6 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 					return null;
 				case "U":
 					return null;
-					//return ambiguityMap.getKey(node.getSimplifiedWordForm());
 				case "B":
 					return null;
 				case "I":

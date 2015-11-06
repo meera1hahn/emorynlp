@@ -11,6 +11,7 @@
     
     <global>
         <clusters>/home/azureuser/cs571/data/brown-rcv1.clean.tokenized-CoNLL03.txt-c1000-freq1.txt.xz</clusters>
+    	<map>/home/azureuser/data/entityTagMap.data</map>
     </global>
 
     <optimizer>
