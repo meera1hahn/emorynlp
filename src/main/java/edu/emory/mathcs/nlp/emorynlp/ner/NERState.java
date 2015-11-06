@@ -35,26 +35,26 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	{
 		super(nodes);
 		entityTags = new String[nodes.length];
-		getDBPediaTag(nodes, entityTags);
+		getDBPediaTag(nodes);
 	}
 	
-	private void getDBPediaTag(N[] nodes, String[] entityTags) {
+	private void getDBPediaTag(N[] nodes) {
 		N node;
 		int innerCount = 1;
 		for(int i = 0; i < nodes.length; i++) {
 			node = nodes[i];
 			if (getLabel(node) != null) {
 				String label = getLabel(node).substring(0, 1);
+				System.out.println(NERConfig.dbpedia.size());
 				switch(label) {
 					case "U":
-						entityTags[i] = NERConfig.dbpedia.get(node.getSimplifiedWordForm());
-						System.out.println(NERConfig.dbpedia.get(node.getSimplifiedWordForm()));
-						//System.out.println(node.getSimplifiedWordForm().toLowerCase());
+						entityTags[i] = NERConfig.dbpedia.get(node.getSimplifiedWordForm().toLowerCase());
+						System.out.println(NERConfig.dbpedia.get(node.getSimplifiedWordForm().toLowerCase()));
 						break;
 					case "B":
 						String full = node.getSimplifiedWordForm();
 						if (innerCount + i == nodes.length) {
-							//entityTags[i] = ambiguityMap.get(node.getSimplifiedWordForm());
+							entityTags[i] = NERConfig.dbpedia.get(node.getSimplifiedWordForm().toLowerCase());
 							break;
 						}
 						node = nodes[innerCount + i];
@@ -72,8 +72,8 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 						//System.out.println(full);
 						int j;
 						for(j = i; j <= (i + innerCount); j++) {
-							System.out.println(NERConfig.dbpedia.get(full));
-							entityTags[j] = NERConfig.dbpedia.get(full);
+							System.out.println(NERConfig.dbpedia.get(full.toLowerCase()));
+							entityTags[j] = NERConfig.dbpedia.get(full.toLowerCase());
 						}
 						i = j;
 						innerCount = 1;
