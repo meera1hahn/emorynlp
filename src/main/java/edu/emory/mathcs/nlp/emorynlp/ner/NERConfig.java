@@ -33,7 +33,7 @@ import edu.emory.mathcs.nlp.emorynlp.component.node.NLPNode;
  */
 public class NERConfig extends NLPConfig<NLPNode>
 {
-	public static Map<String,List<String>> dbpedia;
+	public static Map<String, String> dbpedia;
 	
 	public NERConfig() {}
 	
@@ -45,15 +45,9 @@ public class NERConfig extends NLPConfig<NLPNode>
 	
 	public void init()
 	{
-		Element eGlobal = XMLUtils.getFirstElementByTagName(xml, "global");
-		if (eGlobal == null) return;
-		
-		Element element = XMLUtils.getFirstElementByTagName(eGlobal, "map");
-		String path = XMLUtils.getTrimmedTextContent(xml);
-		
-		ObjectInputStream in = IOUtils.createObjectXZBufferedInputStream(path);
+		ObjectInputStream in = IOUtils.createObjectXZBufferedInputStream("/home/azureuser/data/entityTagMap.data");
 		try {
-			dbpedia = (Map<String,List<String>>)in.readObject();
+			dbpedia = (Map<String, String>)in.readObject();
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
