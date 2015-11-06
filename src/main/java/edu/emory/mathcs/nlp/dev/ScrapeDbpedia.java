@@ -56,7 +56,7 @@ public class ScrapeDbpedia {
 	    	         } 
 	    	         // Write to disk with FileOutputStream
 	    	         FileOutputStream f_out = new 
-	    	         	FileOutputStream("/Users/meerahahn/Desktop/Development/NLP_Research/nerdata/entityTagMap.data");
+	    	         	FileOutputStream("/Users/meerahahn/Desktop/Development/NLP_Research/nerdata/entityTagMap.xz");
 
 	    	         // Write object with ObjectOutputStream
 	    	         ObjectOutputStream obj_out = new
@@ -69,24 +69,6 @@ public class ScrapeDbpedia {
 	    	      }catch(Exception e){
 	    	         e.printStackTrace();
 	    	      }
-	    	      
-	    	      /*
-	    	      // Read from disk using FileInputStream
-	    	      FileInputStream f_in = new 
-	    	      	FileInputStream("/Users/meerahahn/Desktop/Development/NLP_Research/nerdata/entityTagMap.data");
-
-	    	      // Read object using ObjectInputStream
-	    	      ObjectInputStream obj_in = 
-	    	      	new ObjectInputStream (f_in);
-
-	    	      // Read an object
-	    	      Object obj = obj_in.readObject();
-
-	    	      if (obj instanceof HashMap) {
-	    	      	// Cast object to a Map
-	    	      	Map vec = (HashMap) obj;
-	    	      }
-	    	     */ 	  
 	}
 	
 	

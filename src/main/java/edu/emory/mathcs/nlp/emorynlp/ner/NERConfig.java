@@ -15,6 +15,8 @@
  */
 package edu.emory.mathcs.nlp.emorynlp.ner;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -45,16 +47,25 @@ public class NERConfig extends NLPConfig<NLPNode>
 	
 	public void init()
 	{
-		ObjectInputStream in = IOUtils.createObjectXZBufferedInputStream("/home/azureuser/data/entityTagMap.data");
-		try {
-			dbpedia = (Map<String, String>)in.readObject();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
+		String path = "/home/azureuser/data/entityTagMap.data";
+	    try {
+			FileInputStream f_in = new FileInputStream(path);
+  	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
+  	       dbpedia = (Map<String, String>)obj_in.readObject();
+  	       obj_in.close();
+		} catch (IOException | ClassNotFoundException e1) {
+			e1.printStackTrace();
 		}
-		try {
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		ObjectInputStream in = IOUtils.createObjectXZBufferedInputStream("/home/azureuser/data/entityTagMap.data");
+//		try {
+//			dbpedia = (Map<String, String>)in.readObject();
+//		} catch (ClassNotFoundException | IOException e) {
+//			e.printStackTrace();
+//		}
+//		try {
+//			in.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 }
