@@ -72,28 +72,11 @@ public enum BILOU
 			
 			switch (toBILOU(tag))
 			{
-			case U: 
-				map.put(getKey(i,i,size), toTag(tag)); 
-				beginChunk = -1; 
-				break;
-			case B: 
-				beginChunk = i; 
-				tags.add(toTag(tag)); 
-				break;
-			//case L: if (0 <= beginChunk&&beginChunk < i) map.put(getKey(beginChunk,i,size), toTag(tag)); beginChunk = -1; break;
-			case L: 
-				tags.add(toTag(tag));
-				if (0 <= beginChunk&&beginChunk < i) {
-					map.put(getKey(beginChunk,i,size),getBestTag(tags)); 
-				}
-				beginChunk = -1; 
-				break;
-			case O: 
-				beginChunk = -1; 
-				break;
-			case I: 
-				tags.add(toTag(tag));
-				break;
+			case U: map.put(getKey(i,i,size), toTag(tag)); beginChunk = -1; break;
+			case B: beginChunk = i; break;
+			case L: if (0 <= beginChunk&&beginChunk < i) map.put(getKey(beginChunk,i,size), toTag(tag)); beginChunk = -1; break;
+			case O: beginChunk = -1; break;
+			case I: break;
 			}
 		}
 		return map;

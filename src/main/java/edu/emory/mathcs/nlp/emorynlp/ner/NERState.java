@@ -69,7 +69,6 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 						}
 						int j;
 						for(j = i; j <= (i + innerCount); j++) {
-							System.out.println(NERConfig.dbpedia.get(full.toLowerCase()));
 							entityTags[j] = NERConfig.dbpedia.get(full.toLowerCase());
 						}
 						i = j;
@@ -95,9 +94,6 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	}
 	
 	public String getAmbiguityClass(N node){
-		if(entityTags[node.getID()] != null) {
-			System.out.println("yes");
-		}
 		return entityTags[node.getID()];
 	}
 
