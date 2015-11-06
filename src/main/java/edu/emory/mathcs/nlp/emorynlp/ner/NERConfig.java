@@ -56,16 +56,5 @@ public class NERConfig extends NLPConfig<NLPNode>
 		} catch (IOException | ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
-//		ObjectInputStream in = IOUtils.createObjectXZBufferedInputStream("/home/azureuser/data/entityTagMap.data");
-//		try {
-//			dbpedia = (Map<String, String>)in.readObject();
-//		} catch (ClassNotFoundException | IOException e) {
-//			e.printStackTrace();
-//		}
-//		try {
-//			in.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 }

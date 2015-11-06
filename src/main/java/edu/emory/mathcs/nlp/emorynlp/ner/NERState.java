@@ -30,10 +30,11 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
  */
 public class NERState<N extends NLPNode> extends L2RState<N>
 {
+	private String[] entityTags;
 	public NERState(N[] nodes)
 	{
 		super(nodes);
-		String[] entityTags = new String[nodes.length];
+		entityTags = new String[nodes.length];
 		getDBPediaTag(nodes, entityTags);
 	}
 	
@@ -46,7 +47,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 				String label = getLabel(node).substring(0, 1);
 				switch(label) {
 					case "U":
-						//entityTags[i] = ambiguityMap.get(node.getSimplifiedWordForm());
+						entityTags[i] = NERConfig.dbpedia.get(node.getSimplifiedWordForm());
 						//System.out.println(node.getSimplifiedWordForm().toLowerCase());
 						break;
 					case "B":
@@ -70,7 +71,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 						//System.out.println(full);
 						int j;
 						for(j = i; j <= (i + innerCount); j++) {
-							//entityTags[j] = ambiguityMap.get(full);
+							entityTags[j] = NERConfig.dbpedia.get(full);
 						}
 						i = j;
 						innerCount = 1;
@@ -100,15 +101,8 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 			switch(label) {
 				case "O":
 					return null;
-				case "U":
-					return null;
-				case "B":
-					return null;
-				case "I":
-					return null;
-				case "L":
-					return null;
-				default: return null;
+				default: 
+					return entityTags[node.getID()];
 			}
 		}
 		return null;
