@@ -89,7 +89,6 @@ public enum BILOU
 				beginChunk = -1; 
 				break;
 			case O: 
-				tags.add(toTag(tag)); 
 				beginChunk = -1; 
 				break;
 			case I: 

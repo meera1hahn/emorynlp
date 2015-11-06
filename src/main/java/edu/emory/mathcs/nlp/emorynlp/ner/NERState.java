@@ -15,6 +15,7 @@
  */
 package edu.emory.mathcs.nlp.emorynlp.ner;
 
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 import edu.emory.mathcs.nlp.emorynlp.component.eval.Eval;
@@ -32,6 +33,41 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	public NERState(N[] nodes)
 	{
 		super(nodes);
+		String[] entityTags = new String[nodes.length];
+		getDBPediaTag(nodes, entityTags);
+	}
+	
+	private void getDBPediaTag(N[] nodes, String[] entityTags) {
+		N node;
+		int innerCount = 1;
+		for(int i = 0; i < nodes.length; i++) {
+			node = nodes[i];
+			if (getLabel(node) != null) {
+				String label = getLabel(node).substring(0, 1);
+				switch(label) {
+					case "U":
+						//entityTags[i] = ambiguityMap.get(node.getSimplifiedWordForm());
+						System.out.println(node.getSimplifiedWordForm());
+					case "B":
+						String full = node.getSimplifiedWordForm();
+						while(getLabel(node).substring(0, 1).equals("I")){
+							full += "_" + node.getSimplifiedWordForm();
+							innerCount++;
+							node = nodes[innerCount + i];
+						}
+						if(getLabel(node).substring(0, 1).equals("L")) {
+							full += "_" + node.getSimplifiedWordForm();
+						}
+						int j;
+						for(j = i; j <= (i + innerCount); j++) {
+							//entityTags[j] = ambiguityMap.get(full);
+							System.out.println(full);
+						}
+						i = j;
+						innerCount = 1;
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -49,7 +85,23 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	}
 	
 	public String getAmbiguityClass(N node){
-		System.out.println(getLabel(node));
+		if (getLabel(node) != null) {
+			String label = getLabel(node).substring(0, 1);
+			switch(label) {
+				case "O":
+					return null;
+				case "U":
+					return null;
+					//return ambiguityMap.getKey(node.getSimplifiedWordForm());
+				case "B":
+					return null;
+				case "I":
+					return null;
+				case "L":
+					return null;
+				default: return null;
+			}
+		}
 		return null;
 	}
 
