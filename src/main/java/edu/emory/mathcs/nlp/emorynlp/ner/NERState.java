@@ -48,6 +48,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 				switch(label) {
 					case "U":
 						entityTags[i] = NERConfig.dbpedia.get(node.getSimplifiedWordForm());
+						System.out.println(NERConfig.dbpedia.get(node.getSimplifiedWordForm()));
 						//System.out.println(node.getSimplifiedWordForm().toLowerCase());
 						break;
 					case "B":
@@ -71,6 +72,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 						//System.out.println(full);
 						int j;
 						for(j = i; j <= (i + innerCount); j++) {
+							System.out.println(NERConfig.dbpedia.get(full));
 							entityTags[j] = NERConfig.dbpedia.get(full);
 						}
 						i = j;
@@ -96,16 +98,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	}
 	
 	public String getAmbiguityClass(N node){
-		if (getLabel(node) != null) {
-			String label = getLabel(node).substring(0, 1);
-			switch(label) {
-				case "O":
-					return null;
-				default: 
-					return entityTags[node.getID()];
-			}
-		}
-		return null;
+		return entityTags[node.getID()];
 	}
 
 	@Override

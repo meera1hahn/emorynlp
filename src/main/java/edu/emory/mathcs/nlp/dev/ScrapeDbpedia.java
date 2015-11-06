@@ -1,13 +1,18 @@
 package edu.emory.mathcs.nlp.dev;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+
+import edu.emory.mathcs.nlp.common.util.StringUtils;
 
 public class ScrapeDbpedia {
 	private static BufferedReader br;
@@ -28,7 +33,7 @@ public class ScrapeDbpedia {
 	    	      try{
 	    	         br = new BufferedReader(new FileReader("/Users/meerahahn/Desktop/Development/NLP_Research/nerdata/instance_types_en.nt"));
 	    	         while ((currentLine = br.readLine()) != null) {
-	    	         //for(int i = 0; i < 200; i++) {
+	    	         //for(int i = 0; i < 600; i++) {
 	    	        	//currentLine = br.readLine();
 	    	            s = new Scanner(currentLine);
 	    	            part1 = s.next();
@@ -56,7 +61,7 @@ public class ScrapeDbpedia {
 	    	         } 
 	    	         // Write to disk with FileOutputStream
 	    	         FileOutputStream f_out = new 
-	    	         	FileOutputStream("/Users/meerahahn/Desktop/Development/NLP_Research/nerdata/entityTagMap.xz");
+	    	         	FileOutputStream("/Users/meerahahn/Desktop/Development/NLP_Research/nerdata/entityTagMap.data");
 
 	    	         // Write object with ObjectOutputStream
 	    	         ObjectOutputStream obj_out = new
@@ -69,16 +74,39 @@ public class ScrapeDbpedia {
 	    	      }catch(Exception e){
 	    	         e.printStackTrace();
 	    	      }
+	    	      
+	    	      //test();
+	    	     
+	    		    
+	}
+	public static void test() {
+		 // Read from disk using FileInputStream
+	      String path = "/Users/meerahahn/Desktop/Development/NLP_Research/nerdata/entityTagMap.data";
+	      Map<String, String> dbpedia = null;
+		    try {
+				FileInputStream f_in = new FileInputStream(path);
+	  	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
+	  	       dbpedia = (Map<String, String>)obj_in.readObject();
+	  	       obj_in.close();
+			} catch (IOException | ClassNotFoundException e1) {
+				e1.printStackTrace();
+			} 
+		    
+		    System.out.println(dbpedia.size());
+		    for (Map.Entry<String,String> entry : dbpedia.entrySet()) {
+		    	  System.out.print(entry.getKey() + " ");
+		    	  System.out.println(entry.getValue());
+		    }
 	}
 	
 	
 	public static void addTags(String entity, Set<String> possibleTags, Map<String, String> entityToTags) {
 		if(possibleTags.contains("Person")){
-			entityToTags.put(entity.toLowerCase(), "PER");
+			entityToTags.put(getString(entity.toLowerCase()), "PER");
 			return;
 		}
 		if(possibleTags.contains("Organisation")){
-			entityToTags.put(entity.toLowerCase(), "ORG");
+			entityToTags.put(getString(entity.toLowerCase()), "ORG");
 			return;
 		}
 		if(possibleTags.contains("Place")){
@@ -86,5 +114,15 @@ public class ScrapeDbpedia {
 			return;
 		}
 		return;
+	}
+	
+	public static String getString(String s) {
+		s = s.replaceAll("\\d","");
+		s = s.replace(".", "");
+		s = s.replace(",", "");
+		s = s.replace("%", "");
+		s = s.replace("", "");
+		s = s.trim();
+		return s;
 	}
 }
