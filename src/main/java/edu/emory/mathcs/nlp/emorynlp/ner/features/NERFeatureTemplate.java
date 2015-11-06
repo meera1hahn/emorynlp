@@ -42,7 +42,7 @@ public abstract class NERFeatureTemplate<N extends NLPNode> extends FeatureTempl
 		
 		switch (item.field)
 		{
-		case ambiguity_class: state.getAmbiguityClass(node);
+		case ambiguity_class: return state.getAmbiguityClass(node);
 		default: return getFeature(item, node);
 		}
 	}

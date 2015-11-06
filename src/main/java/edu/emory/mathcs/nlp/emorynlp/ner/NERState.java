@@ -48,8 +48,9 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 		return s;
 	}
 	
-	public void getAmbiguityClass(N node){
+	public String getAmbiguityClass(N node){
 		System.out.println(getLabel(node));
+		return null;
 	}
 
 	@Override
