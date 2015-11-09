@@ -47,10 +47,19 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 		node.setNamedEntityTag(label);
 		return s;
 	}
+	
+	public void fixBILOU()
+	{
+		for(int i = 0; i < nodes.length; i++)
+		{
+			//do stuff
+		}
+	}
 
 	@Override
 	public void evaluate(Eval eval)
 	{
+		fixBILOU();
 		Int2ObjectMap<String> gMap = BILOU.collectNamedEntityMap(oracle, String::toString, 1, nodes.length);
 		Int2ObjectMap<String> sMap = BILOU.collectNamedEntityMap(nodes , this::getLabel  , 1, nodes.length);
 		((F1Eval)eval).add(countCorrect(sMap, gMap), sMap.size(), gMap.size());
