@@ -47,6 +47,8 @@ public class NERFeatureTemplate0<N extends NLPNode> extends NERFeatureTemplate<N
 		add(new FeatureItem<>(-1, Field.part_of_speech_tag));
 		add(new FeatureItem<>(-1, Field.ambiguity_class));
 		add(new FeatureItem<>(-1, Field.named_entity_tag));
+		add(new FeatureItem<>( -1, Field.word_vector));
+		add(new FeatureItem<>( -1, Field.word_history));
 
 		
 		add(new FeatureItem<>( 1, Field.simplified_word_form));
