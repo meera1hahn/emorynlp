@@ -107,11 +107,16 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	{
 		String s = node.getNamedEntityTag();
 		node.setNamedEntityTag(label);
+		NERConfig.wordHistory.put(node.getSimplifiedWordForm(), label);
 		return s;
 	}
 	
 	public String getAmbiguityClass(N node){
 		return entityTags[node.getID()];
+	}
+	
+	public String getWordHistory(N node){
+		return NERConfig.wordHistory.get(node.getSimplifiedWordForm());
 	}
 
 	@Override

@@ -16,17 +16,13 @@
 package edu.emory.mathcs.nlp.emorynlp.ner;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Element;
-
-import edu.emory.mathcs.nlp.common.util.IOUtils;
-import edu.emory.mathcs.nlp.common.util.XMLUtils;
 import edu.emory.mathcs.nlp.emorynlp.component.config.NLPConfig;
 import edu.emory.mathcs.nlp.emorynlp.component.node.NLPNode;
 
@@ -37,6 +33,8 @@ public class NERConfig extends NLPConfig<NLPNode>
 {
 	public static Map<String, String> dbpedia;
 	public static Map<String, List<Double>> wordVectors;
+	public static Map<String, String> wordHistory;
+
 	
 	public NERConfig() {}
 	
@@ -45,6 +43,7 @@ public class NERConfig extends NLPConfig<NLPNode>
 		super(in);
 		initDbpedia();
 		initVectors();
+		initHistory();
 	}
 	
 	public void initDbpedia()
@@ -69,5 +68,10 @@ public class NERConfig extends NLPConfig<NLPNode>
 		} catch (IOException | ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	public void initHistory()
+	{
+		wordHistory = new HashMap<String, String>();
 	}
 }

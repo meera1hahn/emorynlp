@@ -50,5 +50,6 @@ public enum Field
 	// more
 	binary,	// set
 	
-	word_vector;
+	word_vector,
+	word_history;
 }
