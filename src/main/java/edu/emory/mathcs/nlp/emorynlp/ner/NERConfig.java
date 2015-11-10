@@ -20,8 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import edu.emory.mathcs.nlp.emorynlp.component.config.NLPConfig;
 import edu.emory.mathcs.nlp.emorynlp.component.node.NLPNode;
@@ -33,7 +35,7 @@ public class NERConfig extends NLPConfig<NLPNode>
 {
 	public static Map<String, String> dbpedia;
 	public static Map<String, List<Double>> wordVectors;
-	public static Map<String, String> wordHistory;
+	public static Map<String, Queue<String>> wordHistory;
 
 	
 	public NERConfig() {}
@@ -72,6 +74,6 @@ public class NERConfig extends NLPConfig<NLPNode>
 	
 	public void initHistory()
 	{
-		wordHistory = new HashMap<String, String>();
+		wordHistory = new HashMap<String, Queue<String>>();
 	}
 }
