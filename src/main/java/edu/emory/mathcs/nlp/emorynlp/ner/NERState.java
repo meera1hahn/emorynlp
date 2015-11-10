@@ -125,24 +125,24 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 //					else if(tag == BILOU.B)
 //						label = changeBILOU(BILOU.L, label);
 				
-				if(map.containsKey(form))
-				{
-					HashMap bcount = (HashMap) map.get(form);
-					if(!bcount.containsKey(BILOU.I))
-						label = changeBILOU(BILOU.L, label);
-					else if(!bcount.containsKey(BILOU.L))
-						label = changeBILOU(BILOU.I, label);
-					else
-					{
-						int l = (int) bcount.get(BILOU.L);
-						int i = (int) bcount.get(BILOU.I);
-						
-						if(l > i)
-							label = changeBILOU(BILOU.L, label);
-						else
-							label = changeBILOU(BILOU.I, label);
-					}
-				}
+//				if(map.containsKey(form))
+//				{
+//					HashMap bcount = (HashMap) map.get(form);
+//					if(!bcount.containsKey(BILOU.I))
+//						label = changeBILOU(BILOU.L, label);
+//					else if(!bcount.containsKey(BILOU.L))
+//						label = changeBILOU(BILOU.I, label);
+//					else
+//					{
+//						int l = (int) bcount.get(BILOU.L);
+//						int i = (int) bcount.get(BILOU.I);
+//						
+//						if(l > i)
+//							label = changeBILOU(BILOU.L, label);
+//						else
+//							label = changeBILOU(BILOU.I, label);
+//					}
+//				}
 				
 			
 			}
