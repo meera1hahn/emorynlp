@@ -60,7 +60,7 @@ public class NERConfig extends NLPConfig<NLPNode>
 	}
 	public void initVectors()
 	{
-		String path = "/home/azureuser/data/entityVectorMap.data";
+		String path = "dat/entityVectorMap.data";
 	    try {
 			FileInputStream f_in = new FileInputStream(path);
   	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
