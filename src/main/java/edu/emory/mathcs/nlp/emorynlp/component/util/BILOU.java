@@ -15,6 +15,9 @@
  */
 package edu.emory.mathcs.nlp.emorynlp.component.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Function;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -60,6 +63,7 @@ public enum BILOU
 		Int2ObjectMap<String> map = new Int2ObjectOpenHashMap<>();
 		int i, beginChunk = -1, size = nodes.length;
 		String tag;
+		List<String> tags = new ArrayList<String>();
 		
 		for (i=beginIndex; i<endIndex; i++)
 		{
@@ -75,8 +79,33 @@ public enum BILOU
 			case I: break;
 			}
 		}
-	
 		return map;
+	}
+
+	private static String getBestTag(List<String> tags) {
+		HashMap<String, Integer> mapTAG = new HashMap<>();
+		int value;
+		for(String s: tags) {
+			if(!mapTAG.containsKey(s)) {
+				mapTAG.put(s, 1);
+			} else {
+				value = mapTAG.get(s);
+				mapTAG.put(s, value++);
+			}
+		}
+		String maxTag = "";
+		int countMax = 0;
+		for(HashMap.Entry<String, Integer> entry : mapTAG.entrySet()) {
+			if(entry.getValue() > countMax) {
+				countMax = entry.getValue();
+				maxTag = entry.getKey();
+			}
+		}
+		if(!maxTag.equals("")){
+			return maxTag;
+		}
+		//get most common tag
+		return tags.get(tags.size() - 1);
 	}
 
 	private static int getKey(int beginIndex, int endIndex, int size)

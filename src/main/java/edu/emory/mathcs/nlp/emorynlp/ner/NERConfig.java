@@ -15,8 +15,18 @@
  */
 package edu.emory.mathcs.nlp.emorynlp.ner;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.util.List;
+import java.util.Map;
 
+import org.w3c.dom.Element;
+
+import edu.emory.mathcs.nlp.common.util.IOUtils;
+import edu.emory.mathcs.nlp.common.util.XMLUtils;
 import edu.emory.mathcs.nlp.emorynlp.component.config.NLPConfig;
 import edu.emory.mathcs.nlp.emorynlp.component.node.NLPNode;
 
@@ -25,10 +35,26 @@ import edu.emory.mathcs.nlp.emorynlp.component.node.NLPNode;
  */
 public class NERConfig extends NLPConfig<NLPNode>
 {
+	public static Map<String, String> dbpedia;
+	
 	public NERConfig() {}
 	
 	public NERConfig(InputStream in)
 	{
 		super(in);
+		init();
+	}
+	
+	public void init()
+	{
+		String path = "dat/entityTagMap.data";
+	    try {
+			FileInputStream f_in = new FileInputStream(path);
+  	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
+  	       dbpedia = (Map<String, String>)obj_in.readObject();
+  	       obj_in.close();
+		} catch (IOException | ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
 	}
 }

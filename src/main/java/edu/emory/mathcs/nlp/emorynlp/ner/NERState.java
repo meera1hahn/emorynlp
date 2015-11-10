@@ -15,6 +15,7 @@
  */
 package edu.emory.mathcs.nlp.emorynlp.ner;
 
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 import edu.emory.mathcs.nlp.emorynlp.component.eval.Eval;
@@ -29,9 +30,53 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
  */
 public class NERState<N extends NLPNode> extends L2RState<N>
 {
+	private String[] entityTags;
 	public NERState(N[] nodes)
 	{
 		super(nodes);
+		entityTags = new String[nodes.length];
+		getDBPediaTag(nodes);
+	}
+	
+	private void getDBPediaTag(N[] nodes) {
+		N node;
+		int innerCount = 1;
+		for(int i = 0; i < nodes.length; i++) {
+			node = nodes[i];
+			if (getLabel(node) != null) {
+				String label = getLabel(node).substring(0, 1);
+				switch(label) {
+					case "U":
+						entityTags[i] = NERConfig.dbpedia.get(node.getSimplifiedWordForm().toLowerCase());
+						break;
+					case "B":
+						String full = node.getSimplifiedWordForm();
+						if (innerCount + i == nodes.length) {
+							entityTags[i] = NERConfig.dbpedia.get(node.getSimplifiedWordForm().toLowerCase());
+							break;
+						}
+						node = nodes[innerCount + i];
+						while(getLabel(node).substring(0, 1).equals("I")){
+							full += "_" + node.getSimplifiedWordForm().toLowerCase();
+							if (innerCount + i == nodes.length - 1) {
+								break;
+							}
+							innerCount++;
+							node = nodes[innerCount + i];
+						}
+						if(getLabel(node).substring(0, 1).equals("L")) {
+							full += "_" + node.getSimplifiedWordForm().toLowerCase();
+						}
+						int j;
+						for(j = i; j <= (i + innerCount); j++) {
+							entityTags[j] = NERConfig.dbpedia.get(full.toLowerCase());
+						}
+						i = j;
+						innerCount = 1;
+						break;
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -50,10 +95,84 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	
 	public void fixBILOU()
 	{
+		BILOU prev = null, next = null;
+		String label = "", pLabel = "", nLabel = "";
+		String chunk = null;
 		for(int i = 0; i < nodes.length; i++)
 		{
-			//do stuff
+			label = nodes[i].getNamedEntityTag();
+			//set up local tags
+			BILOU tag = getBILOU(i);
+			if(tag == null)
+				continue;
+			if(i > 0){
+				prev = getBILOU(i-1);
+				pLabel = nodes[i-1].getNamedEntityTag();
+			}
+			if(i < nodes.length -1)
+			{
+				next = getBILOU(i+1);
+				nLabel = nodes[i+1].getNamedEntityTag();
+			}
+			
+			//Things that shouldn't happen
+				//[BI][UBO]
+				//[UOL][IL]
+			
+			//Finding out what might be going wrong
+			if(tag == BILOU.B || tag == BILOU.O || tag == BILOU.U)
+			{
+				if(chunk != null)//problem
+				{
+					System.out.println(chunk + " INT BY " + label);
+				}
+				if(tag == BILOU.B)
+					chunk = label;
+			}
+			else if(tag == BILOU.I || tag == BILOU.L)
+			{
+				if(chunk == null)//problem
+				{
+					System.out.println(label + "FOLLOWED " + pLabel);
+					if(tag == BILOU.I)
+						chunk = label;
+				}
+				else
+				{
+					chunk += "_" + label;
+				}
+			}
+			
+			//CASES
+			
+			//BB
+				//Possible approaches:
+					//Make UB
+//			label = changeBILOU(BILOU.U, label);
+				
+				
+			//clean up
+			prev = null; next = null;
+//			nodes[i].setNamedEntityTag(label);
 		}
+    }
+	
+	public String changeBILOU(BILOU tag, String label)
+	{
+		return BILOU.toBILOUTag(tag, label.substring(1));
+	}
+	
+	public BILOU getBILOU(int i)
+	{
+		String label = nodes[i].getNamedEntityTag();
+		if(label != null && label != NLPNode.ROOT_TAG)
+			return BILOU.toBILOU(label);
+		else
+			return null;
+	}
+	
+	public String getAmbiguityClass(N node){
+		return entityTags[node.getID()];
 	}
 
 	@Override

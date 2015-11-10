@@ -48,7 +48,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 public class NLPNode implements Serializable, Comparable<NLPNode>
 {
 	private static final long serialVersionUID = 5522467283393796925L;
-	static final String ROOT_TAG = "@#r$%";
+	public static final String ROOT_TAG = "@#r$%";
 	
 	// core fields
 	protected String       word_form;

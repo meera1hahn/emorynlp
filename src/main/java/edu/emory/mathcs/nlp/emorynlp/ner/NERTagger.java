@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 import edu.emory.mathcs.nlp.emorynlp.component.NLPOnlineComponent;
 import edu.emory.mathcs.nlp.emorynlp.component.config.NLPConfig;
@@ -74,4 +78,30 @@ public class NERTagger<N extends NLPNode> extends NLPOnlineComponent<N,NERState<
 	{
 		return new NERState<>(nodes);
 	}
+//	
+//    //returns argument candidates using the higher-order pruning.
+//	public List<NLPNode> getArgumentCandidateList(NLPNode[] nodes, int predicateID)
+//	{
+//		List<NLPNode> argumentCandidates = new ArrayList<NLPNode>();
+//		NLPNode current = nodes[predicateID], previous = null;
+//		NLPNode predicate = nodes[predicateID];
+//		//get entire subtree dependents
+//		for (NLPNode node : current.getSubNodeList()) {
+//				if (!node.equals(predicate)) {
+//						argumentCandidates.add(node);
+//				}
+//		}
+//		
+//		//ancestors
+//		while (current != null) {
+//			previous = current;
+//			current = current.getDependencyHead();
+//			for (NLPNode node : current.getDependentList()) {
+//				if (node.equals(predicate) && !argumentCandidates.contains(node)) {
+//						argumentCandidates.add(node);
+//				}
+//			}
+//		}
+//	    return argumentCandidates;
+//	}
 }
