@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Map.Entry;
+import java.util.HashMap;
 
 import edu.emory.mathcs.nlp.emorynlp.component.eval.Eval;
 import edu.emory.mathcs.nlp.emorynlp.component.eval.F1Eval;
@@ -34,6 +35,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 public class NERState<N extends NLPNode> extends L2RState<N>
 {
 	private String[] entityTags;
+	private HashMap map = new HashMap<String,HashMap<BILOU, Integer>>();
 	private List<List<Double>> entityVectors;
 	public NERState(N[] nodes)
 	{
@@ -107,14 +109,52 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	@Override
 	protected String setLabel(N node, String label)
 	{
+		BILOU tag;
+		String form = node.getSimplifiedWordForm().toLowerCase();
 		String s = node.getNamedEntityTag();
-		if(node.getID() > 0 && label != null)
+		if(label != null)
 		{
-			BILOU tag = BILOU.toBILOU(label);
-			BILOU prev = getBILOU(node.getID() -1);
-			if(prev == BILOU.I && tag == BILOU.O)
-				label = changeBILOU(BILOU.L, label);
+			if(node.getID() > 0 && label != null)
+			{
+				tag = BILOU.toBILOU(label);
+				BILOU prev = getBILOU(node.getID() -1);
+				
+				if(prev == BILOU.I && tag == BILOU.O)
+					if(map.containsKey(form))
+					{
+						HashMap bcount = (HashMap) map.get(form);
+						if(!bcount.containsKey(BILOU.I))
+							label = changeBILOU(BILOU.L, label);
+						else if(!bcount.containsKey(BILOU.L))
+							label = changeBILOU(BILOU.I, label);
+						else
+						{
+							int l = (int) bcount.get(BILOU.L);
+							int i = (int) bcount.get(BILOU.I);
+							
+							if(l > i)
+								label = changeBILOU(BILOU.L, label);
+							else
+								label = changeBILOU(BILOU.I, label);
+						}
+					}
+					else
+						label = changeBILOU(BILOU.L, label);
+			}
+			tag = BILOU.toBILOU(label);
+			if(map.containsKey(form))
+				if(((HashMap)map.get(form)).containsKey(tag))
+					((HashMap) map.get(form)).put(tag, ((int)((HashMap)map.get(form)).get(tag)) +1);
+				else
+					((HashMap)map.get(form)).put(tag, 1);
+			else
+			{
+				HashMap bcount = new HashMap<BILOU, Integer>();
+				bcount.put(tag, 1);
+				map.put(form, bcount);
+			}
 		}
+		
 		node.setNamedEntityTag(label);
 		Queue<String> history = new LinkedList<String>();
 		if (NERConfig.wordHistory.get(node.getSimplifiedWordForm()) != null) {
