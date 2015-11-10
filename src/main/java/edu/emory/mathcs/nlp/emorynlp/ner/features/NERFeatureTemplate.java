@@ -50,7 +50,7 @@ public abstract class NERFeatureTemplate<N extends NLPNode> extends FeatureTempl
 			else return null;
 		case word_history:
 			if(state.getWordHistory(node) != null) {
-				return state.getEntityVector(node).toString();
+				return state.getWordHistory(node).toString();
 			}
 			else return null;
 		default: return getFeature(item, node);
