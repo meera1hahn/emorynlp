@@ -43,9 +43,6 @@ public class ScrapeDbpedia {
 	    	            	currentEntity = part1.substring(29, part1.length() - 1);
 		    	        	if(!lastEntity.equals("") && !lastEntity.equals(currentEntity)){
 		    	        		addTags(lastEntity, possibleTags, entityToTags);
-		    	        		//if(entityToTags.get(lastEntity) != null) {
-		    	        			//System.out.println(lastEntity + " " + entityToTags.get(lastEntity).toString());
-		    	        		//}
 		    	        		possibleTags.clear();
 		    	        	}
 	    	            } else {

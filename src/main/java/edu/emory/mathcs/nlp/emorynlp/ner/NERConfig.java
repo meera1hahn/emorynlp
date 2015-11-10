@@ -36,16 +36,18 @@ import edu.emory.mathcs.nlp.emorynlp.component.node.NLPNode;
 public class NERConfig extends NLPConfig<NLPNode>
 {
 	public static Map<String, String> dbpedia;
+	public static Map<String, List<Double>> wordVectors;
 	
 	public NERConfig() {}
 	
 	public NERConfig(InputStream in)
 	{
 		super(in);
-		init();
+		initDbpedia();
+		initVectors();
 	}
 	
-	public void init()
+	public void initDbpedia()
 	{
 		String path = "/home/azureuser/data/entityTagMap.data";
 	    try {
@@ -53,6 +55,18 @@ public class NERConfig extends NLPConfig<NLPNode>
   	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
   	       dbpedia = (Map<String, String>)obj_in.readObject();
   	       obj_in.close();
+		} catch (IOException | ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+	}
+	public void initVectors()
+	{
+		String path = "/home/azureuser/data/entityVectorMap.data";
+	    try {
+			FileInputStream f_in = new FileInputStream(path);
+  	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
+  	        wordVectors = (Map<String, List<Double>>)obj_in.readObject();
+  	        obj_in.close();
 		} catch (IOException | ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}

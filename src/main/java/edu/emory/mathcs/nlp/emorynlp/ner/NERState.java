@@ -15,7 +15,8 @@
  */
 package edu.emory.mathcs.nlp.emorynlp.ner;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import edu.emory.mathcs.nlp.emorynlp.component.eval.Eval;
@@ -31,11 +32,13 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 public class NERState<N extends NLPNode> extends L2RState<N>
 {
 	private String[] entityTags;
+	private List<List<Double>> entityVectors = new ArrayList<List<Double>>(4);
 	public NERState(N[] nodes)
 	{
 		super(nodes);
 		entityTags = new String[nodes.length];
 		getDBPediaTag(nodes);
+		getWordVector(nodes);
 	}
 	
 	private void getDBPediaTag(N[] nodes) {
@@ -77,6 +80,19 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 				}
 			}
 		}
+	}
+	
+	private void getWordVector(N[] nodes) {
+		N node;
+		for(int i = 0; i < nodes.length; i++) {
+			node = nodes[i];
+			if (getLabel(node) != null) {
+				entityVectors.add(i, NERConfig.wordVectors.get(node.getSimplifiedWordForm().toLowerCase()));
+			}
+		}
+	}
+	public List<Double> getEntityVector(N node){
+		return entityVectors.get(node.getID());
 	}
 	
 	@Override
