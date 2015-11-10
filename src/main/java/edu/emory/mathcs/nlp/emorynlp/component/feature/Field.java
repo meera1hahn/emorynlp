@@ -48,5 +48,8 @@ public enum Field
 	clusters,
 	
 	// more
-	binary;	// set
+	binary,	// set
+	
+	word_vector,
+	word_history;
 }

@@ -15,7 +15,8 @@
  */
 package edu.emory.mathcs.nlp.emorynlp.ner;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import edu.emory.mathcs.nlp.emorynlp.component.eval.Eval;
@@ -31,11 +32,14 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 public class NERState<N extends NLPNode> extends L2RState<N>
 {
 	private String[] entityTags;
+	private List<List<Double>> entityVectors;
 	public NERState(N[] nodes)
 	{
 		super(nodes);
 		entityTags = new String[nodes.length];
+		entityVectors = new ArrayList<List<Double>>(nodes.length);
 		getDBPediaTag(nodes);
+		getWordVector(nodes);
 	}
 	
 	private void getDBPediaTag(N[] nodes) {
@@ -79,6 +83,19 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 		}
 	}
 	
+	private void getWordVector(N[] nodes) {
+		N node;
+		for(int i = 0; i < nodes.length; i++) {
+			node = nodes[i];
+			if (getLabel(node) != null) {
+				entityVectors.add(i, NERConfig.wordVectors.get(node.getSimplifiedWordForm().toLowerCase()));
+			}
+		}
+	}
+	public List<Double> getEntityVector(N node){
+		return entityVectors.get(node.getID());
+	}
+	
 	@Override
 	protected String getLabel(N node)
 	{
@@ -90,6 +107,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	{
 		String s = node.getNamedEntityTag();
 		node.setNamedEntityTag(label);
+		NERConfig.wordHistory.put(node.getSimplifiedWordForm(), label);
 		return s;
 	}
 	
@@ -173,6 +191,10 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	
 	public String getAmbiguityClass(N node){
 		return entityTags[node.getID()];
+	}
+	
+	public String getWordHistory(N node){
+		return NERConfig.wordHistory.get(node.getSimplifiedWordForm());
 	}
 
 	@Override
