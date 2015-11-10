@@ -106,6 +106,31 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 		return node.getNamedEntityTag();
 	}
 	
+	private int countOccur(int i, BILOU tag)
+	{
+		String form = nodes[i].getSimplifiedWordForm();
+		if(map.containsKey(form))
+			if(((HashMap)map.get(form)).containsKey(tag))
+				return (int) ((HashMap)map.get(form)).get(tag);
+		return 0;
+	}
+	
+	private void addOccur(int i, BILOU tag)
+	{
+		String form = nodes[i].getSimplifiedWordForm();
+		if(map.containsKey(form))
+			if(((HashMap)map.get(form)).containsKey(tag))
+				((HashMap)map.get(form)).put(tag, countOccur(i, tag)+1);
+			else
+				((HashMap)map.get(form)).put(tag, 1);
+		else
+		{
+			HashMap<BILOU, Integer> hm = new HashMap<>();
+			hm.put(tag,1);
+			map.put(form, hm);
+		}
+	}
+	
 	@Override
 	protected String setLabel(N node, String label)
 	{
@@ -114,16 +139,43 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 		String s = node.getNamedEntityTag();
 		if(label != null)
 		{
-			if(node.getID() > 0 && label != null)
+			if(node.getID() > 0 && label != null && getBILOU(node.getID() -1) != null)
 			{
 				tag = BILOU.toBILOU(label);
 				BILOU prev = getBILOU(node.getID() -1);
 				
-				if(prev == BILOU.I)
-					if(tag == BILOU.O)
-						label = changeBILOU(BILOU.L, label);
-//					else if(tag == BILOU.B)
-//						label = changeBILOU(BILOU.L, label);
+				//BI*L interrupted by O
+				switch(prev){
+					case I:
+						if(tag == BILOU.O)
+						{
+							label = changeBILOU(BILOU.L, label);
+						}
+					break;
+					case B:
+//						if(tag == BILOU.B)
+//						{
+//							int[] bli = {	countOccur(node.getID(), BILOU.B),
+//											countOccur(node.getID(), BILOU.L),
+//											countOccur(node.getID(), BILOU.I) };
+//							BILOU[] blis = {BILOU.B, BILOU.L, BILOU.I};
+//							
+//							int max = bli[0];
+//							if(bli[1] > max)
+//								max = bli[1];
+//							if(bli[2] > max)
+//								max = bli[2];
+//							
+//							label = changeBILOU(blis[max], label);
+//							
+//						}
+						break;
+				
+				}
+					
+					
+			
+				//BB
 				
 //				if(map.containsKey(form))
 //				{
@@ -146,7 +198,9 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 				
 			
 			}
+			node.setNamedEntityTag(label);
 			tag = BILOU.toBILOU(label);
+			addOccur(node.getID(), tag);
 			if(map.containsKey(form))
 				if(((HashMap)map.get(form)).containsKey(tag))
 					((HashMap) map.get(form)).put(tag, ((int)((HashMap)map.get(form)).get(tag)) +1);
