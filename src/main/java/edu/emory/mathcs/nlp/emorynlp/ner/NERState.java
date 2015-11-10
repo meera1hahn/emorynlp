@@ -16,7 +16,9 @@
 package edu.emory.mathcs.nlp.emorynlp.ner;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Map.Entry;
 
 import edu.emory.mathcs.nlp.emorynlp.component.eval.Eval;
@@ -107,7 +109,16 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	{
 		String s = node.getNamedEntityTag();
 		node.setNamedEntityTag(label);
-		NERConfig.wordHistory.put(node.getSimplifiedWordForm(), label);
+		Queue<String> history = new LinkedList<String>();
+		if (NERConfig.wordHistory.get(node.getSimplifiedWordForm()) != null) {
+			history = NERConfig.wordHistory.get(node.getSimplifiedWordForm());
+			if (history.size() >= 2) {
+				history.poll();
+			}
+		}
+		history.add(label);
+		NERConfig.wordHistory.put(node.getSimplifiedWordForm(), history);
+
 		return s;
 	}
 	
@@ -116,7 +127,8 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	}
 	
 	public String getWordHistory(N node){
-		return NERConfig.wordHistory.get(node.getSimplifiedWordForm());
+		if (NERConfig.wordHistory.get(node.getSimplifiedWordForm()) != null) return NERConfig.wordHistory.get(node.getSimplifiedWordForm()).peek();
+		else return null;
 	}
 
 	@Override
