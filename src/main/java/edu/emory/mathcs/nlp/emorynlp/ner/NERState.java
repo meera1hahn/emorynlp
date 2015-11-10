@@ -32,11 +32,12 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 public class NERState<N extends NLPNode> extends L2RState<N>
 {
 	private String[] entityTags;
-	private List<List<Double>> entityVectors = new ArrayList<List<Double>>(4);
+	private List<List<Double>> entityVectors;
 	public NERState(N[] nodes)
 	{
 		super(nodes);
 		entityTags = new String[nodes.length];
+		entityVectors = new ArrayList<List<Double>>(nodes.length);
 		getDBPediaTag(nodes);
 		getWordVector(nodes);
 	}

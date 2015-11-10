@@ -35,7 +35,10 @@ public class ScrapeWordVectors {
 	    	        			entityVector.add(Double.valueOf(str));
 	    	        		}
 	    	        		entityToTags.put(entityName, entityVector);
+	    	        		System.out.println("put");
 	    	        	}
+	    	        	current++;
+	    	        	entityVector.clear();
 	    	         }
 	    	         // Write to disk with FileOutputStream
 	    	         FileOutputStream f_out = new FileOutputStream("/Users/meerahahn/Desktop/Development/NLP_Research/nerdata/entityVectorMap.data");
