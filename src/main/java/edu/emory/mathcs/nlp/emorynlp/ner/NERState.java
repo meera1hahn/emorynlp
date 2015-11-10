@@ -127,8 +127,18 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	}
 	
 	public String getWordHistory(N node){
-		if (NERConfig.wordHistory.get(node.getSimplifiedWordForm()) != null) return NERConfig.wordHistory.get(node.getSimplifiedWordForm()).peek();
-		else return null;
+		String first = "";
+		String second = "";
+		Queue<String> history = null;
+		if (NERConfig.wordHistory.get(node.getSimplifiedWordForm()) != null) 
+			history = NERConfig.wordHistory.get(node.getSimplifiedWordForm());
+			if (history.size() >= 3) {
+				first = history.poll();
+			}
+			if (history.size() >= 2) {
+				second = history.peek();
+			}
+		return first + " "  + second;
 	}
 
 	@Override
