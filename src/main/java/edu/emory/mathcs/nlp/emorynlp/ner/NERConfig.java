@@ -66,7 +66,6 @@ public class NERConfig extends NLPConfig<NLPNode>
 			FileInputStream f_in = new FileInputStream(path);
   	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
   	        wordVectors = (Map<String, List<Double>>)obj_in.readObject();
-  	        obj_in.close();
 		} catch (IOException | ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
