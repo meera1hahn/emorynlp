@@ -108,6 +108,13 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	protected String setLabel(N node, String label)
 	{
 		String s = node.getNamedEntityTag();
+		if(node.getID() > 0 && label != null)
+		{
+			BILOU tag = BILOU.toBILOU(label);
+			BILOU prev = getBILOU(node.getID() -1);
+			if(prev == BILOU.I && tag == BILOU.O)
+				label = changeBILOU(BILOU.L, label);
+		}
 		node.setNamedEntityTag(label);
 		Queue<String> history = new LinkedList<String>();
 		if (NERConfig.wordHistory.get(node.getSimplifiedWordForm()) != null) {
@@ -153,23 +160,27 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 			{
 				if(chunk != null)//problem
 				{
-					System.out.println(chunk + " INT BY " + label);
+					System.out.println(chunk + " INT_BY " + label);
 				}
 				if(tag == BILOU.B)
 					chunk = label;
+				else
+					chunk = null;
 			}
 			else if(tag == BILOU.I || tag == BILOU.L)
 			{
 				if(chunk == null)//problem
 				{
-					System.out.println(label + "FOLLOWED " + pLabel);
+					System.out.println(label + " FOLLOWED " + pLabel);
 					if(tag == BILOU.I)
 						chunk = label;
+					else
+						chunk = null;
 				}
-				else
-				{
+				else if(tag == BILOU.I)
 					chunk += "_" + label;
-				}
+				else
+					chunk = null;
 			}
 			
 			//CASES
