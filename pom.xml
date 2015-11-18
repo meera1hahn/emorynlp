@@ -54,7 +54,7 @@
       <resource>
         <directory>src/main/resources</directory>
         <includes>
-          <include>edu/emory/mathcs/nlp/</include>
+          <include>**/*</include>
         </includes>
       </resource>
     </resources>
@@ -108,17 +108,12 @@
     </dependency>
     <dependency>
       <groupId>edu.emory.mathcs.nlp</groupId>
-      <artifactId>corenlp</artifactId>
+      <artifactId>common</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>edu.emory.mathcs.nlp</groupId>
-      <artifactId>tokenization</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>edu.emory.mathcs.nlp</groupId>
-      <artifactId>morphological_analysis</artifactId>
+      <artifactId>machine_learning</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
