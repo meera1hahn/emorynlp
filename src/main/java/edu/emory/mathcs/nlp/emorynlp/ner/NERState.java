@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Map.Entry;
+import java.util.HashMap;
 
 import edu.emory.mathcs.nlp.emorynlp.component.eval.Eval;
 import edu.emory.mathcs.nlp.emorynlp.component.eval.F1Eval;
@@ -34,6 +35,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 public class NERState<N extends NLPNode> extends L2RState<N>
 {
 	private String[] entityTags;
+	private HashMap map = new HashMap<String,HashMap<BILOU, Integer>>();
 	private List<List<Double>> entityVectors;
 	public NERState(N[] nodes)
 	{
@@ -104,10 +106,114 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 		return node.getNamedEntityTag();
 	}
 	
+	private int countOccur(int i, BILOU tag)
+	{
+		String form = nodes[i].getSimplifiedWordForm();
+		if(map.containsKey(form))
+			if(((HashMap)map.get(form)).containsKey(tag))
+				return (int) ((HashMap)map.get(form)).get(tag);
+		return 0;
+	}
+	
+	private void addOccur(int i, BILOU tag)
+	{
+		String form = nodes[i].getSimplifiedWordForm();
+		if(map.containsKey(form))
+			if(((HashMap)map.get(form)).containsKey(tag))
+				((HashMap)map.get(form)).put(tag, countOccur(i, tag)+1);
+			else
+				((HashMap)map.get(form)).put(tag, 1);
+		else
+		{
+			HashMap<BILOU, Integer> hm = new HashMap<>();
+			hm.put(tag,1);
+			map.put(form, hm);
+		}
+	}
+	
 	@Override
 	protected String setLabel(N node, String label)
 	{
+		BILOU tag;
+		String form = node.getSimplifiedWordForm().toLowerCase();
 		String s = node.getNamedEntityTag();
+		if(label != null)
+		{
+			if(node.getID() > 0 && label != null && getBILOU(node.getID() -1) != null)
+			{
+				tag = BILOU.toBILOU(label);
+				BILOU prev = getBILOU(node.getID() -1);
+				
+				//BI*L interrupted by O
+				switch(prev){
+					case I:
+						if(tag == BILOU.O)
+						{
+							label = changeBILOU(BILOU.L, label);
+						}
+					break;
+					case B:
+//						if(tag == BILOU.B)
+//						{
+//							int[] bli = {	countOccur(node.getID(), BILOU.B),
+//											countOccur(node.getID(), BILOU.L),
+//											countOccur(node.getID(), BILOU.I) };
+//							BILOU[] blis = {BILOU.B, BILOU.L, BILOU.I};
+//							
+//							int max = bli[0];
+//							if(bli[1] > max)
+//								max = bli[1];
+//							if(bli[2] > max)
+//								max = bli[2];
+//							
+//							label = changeBILOU(blis[max], label);
+//							
+//						}
+						break;
+				
+				}
+					
+					
+			
+				//BB
+				
+//				if(map.containsKey(form))
+//				{
+//					HashMap bcount = (HashMap) map.get(form);
+//					if(!bcount.containsKey(BILOU.I))
+//						label = changeBILOU(BILOU.L, label);
+//					else if(!bcount.containsKey(BILOU.L))
+//						label = changeBILOU(BILOU.I, label);
+//					else
+//					{
+//						int l = (int) bcount.get(BILOU.L);
+//						int i = (int) bcount.get(BILOU.I);
+//						
+//						if(l > i)
+//							label = changeBILOU(BILOU.L, label);
+//						else
+//							label = changeBILOU(BILOU.I, label);
+//					}
+//				}
+				
+			
+			}
+			node.setNamedEntityTag(label);
+			tag = BILOU.toBILOU(label);
+			addOccur(node.getID(), tag);
+			if(map.containsKey(form))
+				if(((HashMap)map.get(form)).containsKey(tag))
+					((HashMap) map.get(form)).put(tag, ((int)((HashMap)map.get(form)).get(tag)) +1);
+				else
+					((HashMap)map.get(form)).put(tag, 1);
+			else
+			{
+				HashMap bcount = new HashMap<BILOU, Integer>();
+				bcount.put(tag, 1);
+				map.put(form, bcount);
+			}
+		}
+		
 		node.setNamedEntityTag(label);
 		Queue<String> history = new LinkedList<String>();
 		if (NERConfig.wordHistory.get(node.getSimplifiedWordForm()) != null) {
@@ -120,6 +226,88 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 		NERConfig.wordHistory.put(node.getSimplifiedWordForm(), history);
 
 		return s;
+	}
+	
+	public void fixBILOU()
+	{
+		BILOU prev = null, next = null;
+		String label = "", pLabel = "", nLabel = "";
+		String chunk = null;
+		for(int i = 0; i < nodes.length; i++)
+		{
+			label = nodes[i].getNamedEntityTag();
+			//set up local tags
+			BILOU tag = getBILOU(i);
+			if(tag == null)
+				continue;
+			if(i > 0){
+				prev = getBILOU(i-1);
+				pLabel = nodes[i-1].getNamedEntityTag();
+			}
+			if(i < nodes.length -1)
+			{
+				next = getBILOU(i+1);
+				nLabel = nodes[i+1].getNamedEntityTag();
+			}
+			
+			//Things that shouldn't happen
+				//[BI][UBO]
+				//[UOL][IL]
+			
+			//Finding out what might be going wrong
+			if(tag == BILOU.B || tag == BILOU.O || tag == BILOU.U)
+			{
+				if(chunk != null)//problem
+				{
+					System.out.println(chunk + " INT_BY " + label);
+				}
+				if(tag == BILOU.B)
+					chunk = label;
+				else
+					chunk = null;
+			}
+			else if(tag == BILOU.I || tag == BILOU.L)
+			{
+				if(chunk == null)//problem
+				{
+					System.out.println(label + " FOLLOWED " + pLabel);
+					if(tag == BILOU.I)
+						chunk = label;
+					else
+						chunk = null;
+				}
+				else if(tag == BILOU.I)
+					chunk += "_" + label;
+				else
+					chunk = null;
+			}
+			
+			//CASES
+			
+			//BB
+				//Possible approaches:
+					//Make UB
+//			label = changeBILOU(BILOU.U, label);
+				
+				
+			//clean up
+			prev = null; next = null;
+//			nodes[i].setNamedEntityTag(label);
+		}
+    }
+	
+	public String changeBILOU(BILOU tag, String label)
+	{
+		return BILOU.toBILOUTag(tag, label.substring(1));
+	}
+	
+	public BILOU getBILOU(int i)
+	{
+		String label = nodes[i].getNamedEntityTag();
+		if(label != null && label != NLPNode.ROOT_TAG)
+			return BILOU.toBILOU(label);
+		else
+			return null;
 	}
 	
 	public String getAmbiguityClass(N node){
@@ -144,6 +332,7 @@ public class NERState<N extends NLPNode> extends L2RState<N>
 	@Override
 	public void evaluate(Eval eval)
 	{
+		fixBILOU();
 		Int2ObjectMap<String> gMap = BILOU.collectNamedEntityMap(oracle, String::toString, 1, nodes.length);
 		Int2ObjectMap<String> sMap = BILOU.collectNamedEntityMap(nodes , this::getLabel  , 1, nodes.length);
 		((F1Eval)eval).add(countCorrect(sMap, gMap), sMap.size(), gMap.size());

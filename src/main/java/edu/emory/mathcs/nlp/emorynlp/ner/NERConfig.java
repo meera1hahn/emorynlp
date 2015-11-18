@@ -50,7 +50,7 @@ public class NERConfig extends NLPConfig<NLPNode>
 	
 	public void initDbpedia()
 	{
-		String path = "/home/azureuser/data/entityTagMap.data";
+		String path = "dat/entityTagMap.data";
 	    try {
 			FileInputStream f_in = new FileInputStream(path);
   	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
@@ -62,7 +62,7 @@ public class NERConfig extends NLPConfig<NLPNode>
 	}
 	public void initVectors()
 	{
-		String path = "/home/azureuser/data/entityVectorMap.data";
+		String path = "dat/entityVectorMap.data";
 	    try {
 			FileInputStream f_in = new FileInputStream(path);
   	      	ObjectInputStream obj_in = new ObjectInputStream (f_in);
