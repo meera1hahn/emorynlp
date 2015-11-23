@@ -73,7 +73,7 @@ public class ScrapeDbpedia {
 	    	      }
 	    	      
 	    	      //test();
-	    	     
+	    	     Strings
 	    		    
 	}
 	public static void test() {
