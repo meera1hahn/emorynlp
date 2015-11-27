@@ -108,7 +108,16 @@
     </dependency>
     <dependency>
       <groupId>edu.emory.mathcs.nlp</groupId>
+<<<<<<< HEAD
       <artifactId>common</artifactId>
+=======
+      <artifactId>english-models</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.emory.mathcs.nlp</groupId>
+      <artifactId>corenlp</artifactId>
+>>>>>>> emorynlp/master
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
