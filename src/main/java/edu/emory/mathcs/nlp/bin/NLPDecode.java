@@ -27,7 +27,7 @@ import edu.emory.mathcs.nlp.decode.NLPDecoder;
  */
 public class NLPDecode
 {
-	@Option(name="-c", usage="confinguration file (required)", required=true, metaVar="<filename>")
+	@Option(name="-c", usage="confinguration filename (required)", required=true, metaVar="<filename>")
 	public String configuration_file;
 	@Option(name="-i", usage="input path (required)", required=true, metaVar="<filepath>")
 	public String input_path;

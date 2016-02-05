@@ -24,7 +24,8 @@
 	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/junit/junit/4.10/junit-4.10.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/edu/emory/mathcs/nlp/common/1.0.0-SNAPSHOT/common-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/edu/emory/mathcs/nlp/english-models/1.0.0-SNAPSHOT/english-models-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/edu/emory/mathcs/nlp/corenlp/1.0.0-SNAPSHOT/corenlp-1.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/args4j/args4j/2.32/args4j-2.32.jar"/>
 	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/tukaani/xz/1.5/xz-1.5.jar"/>
@@ -34,10 +35,15 @@
 	<classpathentry kind="var" path="M2_REPO/net/openhft/zero-allocation-hashing/0.4/zero-allocation-hashing-0.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/intellij/annotations/12.0/annotations-12.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/edu/emory/mathcs/nlp/machine_learning/1.0.0-SNAPSHOT/machine_learning-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/edu/emory/mathcs/nlp/common/1.0.0-SNAPSHOT/common-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-csv/1.2/commons-csv-1.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="/tokenization"/>
+	<classpathentry kind="src" path="/morphological_analysis"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
